@@ -20,167 +20,26 @@ users:
   ssh-authorized-keys:
     - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7NR0iQe0wbn68zQ+GzLZctOG4JWieQO4Yh9eyqC03K+7zy2FOWD+zYTWqCCwVzNI8qTmsLbw0dkzYtxfUCv3SAlaurSfayMvVG28eQWpoIQ7pAlZRaw3Tn1zJqtOJVQEjkPAMEVYOmkW3odVRoh+EBRDK7nwJ8mmotEo3PwLx6fHCVUiN6qIf5ltHZdUsDma+wFVZbcwEGij90PgWB7jwJlPv0ZtZSaR57etWGuM4Xvl255on065CrLhx7dxWJ1eYV+Do2TAm7+dBvyvNasS2eF/rAm3sdeNwFcds/hn3Zaq2VG9xmdaZI4MRivmlUKITlJoUZSSx1fPOh173dsQbw=="
 
-# for usename 'core'
+# for usename 'rancher'
 ssh_authorized_keys:
   - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAwoDRgLoKN9SK6lYDbzE/LHb8UcklWcDd8dEXABSX1NHSx2L56ahhQ2Sh3OLT4pIcof35cy4WyM4tdyFHosNItgwQCBhUXMR11eTX6gbdoVF0+61RUIGavA1ZxYyrpEuSAarY1pybxlQLsLG1joYgPDjnMu+r8t2OSQym4Cow0hiMYJWwKvyHUIkxy/SW80wxKBYpelxj8Sa89BwfrTVB4xixpTSeXLrsS4tlXSCTpaL1sCz9pkId7dXAd0Eyf/cubh9KlEermG+ooeIp70g5WcJLiper27n+WO9GFAOTzPFbeTkyqlwI1nO4kn5gXjx4iMcvBi1kHWR7Sqh5xGmtSQ=="
   - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7NR0iQe0wbn68zQ+GzLZctOG4JWieQO4Yh9eyqC03K+7zy2FOWD+zYTWqCCwVzNI8qTmsLbw0dkzYtxfUCv3SAlaurSfayMvVG28eQWpoIQ7pAlZRaw3Tn1zJqtOJVQEjkPAMEVYOmkW3odVRoh+EBRDK7nwJ8mmotEo3PwLx6fHCVUiN6qIf5ltHZdUsDma+wFVZbcwEGij90PgWB7jwJlPv0ZtZSaR57etWGuM4Xvl255on065CrLhx7dxWJ1eYV+Do2TAm7+dBvyvNasS2eF/rAm3sdeNwFcds/hn3Zaq2VG9xmdaZI4MRivmlUKITlJoUZSSx1fPOh173dsQbw=="
     
-coreos:
-  update:
-    reboot-strategy: off # Do not reboot after updates are applied
-
-  units:
-    # for sysctl update
-    # NOTICE: this unit must be uppermost in units section.
-    - name: systemd-modules-load.service
-      command: restart
-    - name: systemd-sysctl.service
-      command: restart
-
-    - name: settimezone.service
-      command: start
-      content: |
-        [Unit]
-        Description=Set the time zone
-
-        [Service]
-        ExecStart=/usr/bin/timedatectl set-timezone Asia/Seoul
-        RemainAfterExit=yes
-        Type=oneshot
-        
-    # disable sshd.socket, enable sshd.service
-    - name: sshd.socket
-      command: stop
-      mask: true
-  
-    - name: sshd.service
-      command: start
-      enable: true
-      content: |
-        [Unit]
-        Description=OpenSSH server daemon
-  
-        [Service]
-        Type=forking
-        PIDFile=/var/run/sshd.pid
-        ExecStart=/usr/sbin/sshd
-        ExecReload=/bin/kill -HUP $MAINPID
-        KillMode=process
-        Restart=on-failure
-        RestartSec=30s
-  
-        [Install]
-        WantedBy=multi-user.target
-        
-#    - name: systemd-networkd.service
-#      command: stop
-#    
-#    - name: 00-static.network
-#      runtime: true
-#      content: |
-#        [Match]
-#        Name=ens* # vSphere
-#        #Name=enp* # VirtualBox
-#    
-#        [Network]
-#        Address=192.168.100.24/24
-#        Gateway=192.168.100.1
-#        # search first on last input
-#        DNS=8.8.8.8
-#        DNS=192.168.100.21
-#
-#    - name: systemd-networkd.service
-#      command: restart
-
-    #    - name: 11-internal.network
-    #      runtime: true
-    #      content: |
-    #        [Match]
-    #        #Name=ens* # vSphere
-    #        Name=enp* # VirtualBox
-    #
-    #        [Network]
-    #        Address=192.168.100.30
-    #        Gateway=192.168.100.1
-    #        # search first on last input
-    #        DNS=8.8.8.8
-    #        DNS=192.168.100.21
-    #
-    #    - name: systemd-networkd
-    #      command: start
-    
-    # disable auto update
-    - name: locksmithd.service
-      command: stop
-    - name: update-engine.service
-      drop-ins:
-        - name: 10-fix-success-exit-status.conf
-          content: |
-            [Service]
-            SuccessExitStatus=1
-      command: stop
-
-    # docker insecure registry
-    - name: docker.service
-      drop-ins:
-        - name: 50-insecure-registry.conf
-          content: |
-            [Service]
-            Environment="DOCKER_OPTS=--insecure-registry='0.0.0.0/0'"
-      command: restart
-
-      #    # docker container service
-      #    - name: kafka-01.service
-      #      command: start
-      #      enable: true
-      #      content: |
-      #        [Unit]
-      #        Description=kafka-01 
-      #        After=docker.service
-      #        Requires=docker.service
-      #          
-      #        [Service]
-      #        TimeoutStartSec=0
-      #        ExecStartPre=-/usr/bin/docker kill kafka-01
-      #        ExecStartPre=-/usr/bin/docker rm kafka-01
-      #        ExecStartPre=/usr/bin/docker pull 106.255.227.34:5000/ryon-cent7
-      #        ExecStart=/usr/bin/docker run -p 12322:22 --privileged -it -e "container=docker" -v /sys/fs/cgroup:/sys/fs/cgroup --name kafka-01 106.255.227.34:5000/ryon-cent7 /usr/sbin/init
-      # 
-      #        [Install]
-      #        WantedBy=multi-user.target
-
-
 write_files:
   # bashrc
   - path: /root/.bashrc
-    permissions: 0644
+    permissions: "0644"
     owner: root
     content: |
+      export IP="$(ifconfig $(route -n | grep ^0.0.0.0 | awk '{print $NF}') | grep inet | grep -v inet6 | awk '{print $2}')"
+			export PS1='\[\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \[\033[0;36m\]\h<$IP> \w\[\033[0;32m\]$(__git_ps1)\n\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\] ▶\[\033[0m\] '
+
       alias ls='ls --color'
-
-      export PS1="[COREOS] $(tput setaf 1)\w\n\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h\[$(tput setaf 5)\]\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$\[$(tput sgr0)\] "
-
       alias ll='ls -la'
       alias rm='rm -i'
       alias cp='cp -i'
       alias mv='mv -i'
       alias ..='cd ..'
-
-  # for elasticsearch
-  - path: /etc/sysctl.d/max_map_count.conf
-    content: |
-      vm.max_map_count=262144
-
-  - path: "/var/run/sshd.pid"
-    permissions: "0644"
-    owner: "root"
-
-  - path: /etc/resolv.conf
-    permissions: 0644
-    owner: root
-    content: |
-      nameserver 8.8.8.8
-      nameserver 8.8.4.4
 
   - path: /etc/ssh/sshd_config
     permissions: 0600
@@ -192,6 +51,6 @@ write_files:
       Subsystem sftp internal-sftp
 
       PermitRootLogin no
-      AllowUsers core ryon devnamu
+      AllowUsers rancher ryon devnamu
       PasswordAuthentication no
       ChallengeResponseAuthentication no
