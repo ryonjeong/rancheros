@@ -10,13 +10,13 @@ rancher:
   
 # for usename 'rancher'
 ssh_authorized_keys:
-  - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAwoDRgLoKN9SK6lYDbzE/LHb8UcklWcDd8dEXABSX1NHSx2L56ahhQ2Sh3OLT4pIcof35cy4WyM4tdyFHosNItgwQCBhUXMR11eTX6gbdoVF0+61RUIGavA1ZxYyrpEuSAarY1pybxlQLsLG1joYgPDjnMu+r8t2OSQym4Cow0hiMYJWwKvyHUIkxy/SW80wxKBYpelxj8Sa89BwfrTVB4xixpTSeXLrsS4tlXSCTpaL1sCz9pkId7dXAd0Eyf/cubh9KlEermG+ooeIp70g5WcJLiper27n+WO9GFAOTzPFbeTkyqlwI1nO4kn5gXjx4iMcvBi1kHWR7Sqh5xGmtSQ=="
-  - "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7NR0iQe0wbn68zQ+GzLZctOG4JWieQO4Yh9eyqC03K+7zy2FOWD+zYTWqCCwVzNI8qTmsLbw0dkzYtxfUCv3SAlaurSfayMvVG28eQWpoIQ7pAlZRaw3Tn1zJqtOJVQEjkPAMEVYOmkW3odVRoh+EBRDK7nwJ8mmotEo3PwLx6fHCVUiN6qIf5ltHZdUsDma+wFVZbcwEGij90PgWB7jwJlPv0ZtZSaR57etWGuM4Xvl255on065CrLhx7dxWJ1eYV+Do2TAm7+dBvyvNasS2eF/rAm3sdeNwFcds/hn3Zaq2VG9xmdaZI4MRivmlUKITlJoUZSSx1fPOh173dsQbw=="
+  - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAwoDRgLoKN9SK6lYDbzE/LHb8UcklWcDd8dEXABSX1NHSx2L56ahhQ2Sh3OLT4pIcof35cy4WyM4tdyFHosNItgwQCBhUXMR11eTX6gbdoVF0+61RUIGavA1ZxYyrpEuSAarY1pybxlQLsLG1joYgPDjnMu+r8t2OSQym4Cow0hiMYJWwKvyHUIkxy/SW80wxKBYpelxj8Sa89BwfrTVB4xixpTSeXLrsS4tlXSCTpaL1sCz9pkId7dXAd0Eyf/cubh9KlEermG+ooeIp70g5WcJLiper27n+WO9GFAOTzPFbeTkyqlwI1nO4kn5gXjx4iMcvBi1kHWR7Sqh5xGmtSQ== ryon@devnamu.com
+  - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7NR0iQe0wbn68zQ+GzLZctOG4JWieQO4Yh9eyqC03K+7zy2FOWD+zYTWqCCwVzNI8qTmsLbw0dkzYtxfUCv3SAlaurSfayMvVG28eQWpoIQ7pAlZRaw3Tn1zJqtOJVQEjkPAMEVYOmkW3odVRoh+EBRDK7nwJ8mmotEo3PwLx6fHCVUiN6qIf5ltHZdUsDma+wFVZbcwEGij90PgWB7jwJlPv0ZtZSaR57etWGuM4Xvl255on065CrLhx7dxWJ1eYV+Do2TAm7+dBvyvNasS2eF/rAm3sdeNwFcds/hn3Zaq2VG9xmdaZI4MRivmlUKITlJoUZSSx1fPOh173dsQbw== devnamu@devnamu.com
     
 write_files:
   - path: /root/.bashrc
     permissions: "0644"
-    owner: root
+    owner: root:root
     content: |
       export IP="$(ifconfig $(route -n | grep ^0.0.0.0 | awk '{print $NF}') | grep inet | grep -v inet6 | awk '{print $2}')"
       export PS1='\[\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \[\033[0;36m\]\h<$IP> \w\[\033[0;32m\]$(__git_ps1)\n\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\] ▶\[\033[0m\] '
@@ -29,7 +29,7 @@ write_files:
       alias ..='cd ..'
 
   - path: /etc/ssh/sshd_config
-    permissions: 0600
+    permissions: "0600"
     owner: root:root
     content: |
       Port 12321
