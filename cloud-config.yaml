@@ -28,7 +28,7 @@ write_files:
     owner: root:root
     content: |
       export IP="$(ifconfig $(route -n | grep ^0.0.0.0 | awk '{print $NF}') | grep inet | grep -v inet6 | awk '{print $2}')"
-
+      export PS1='\u @ \h <$IP> \w\n \$ '
       alias ls='ls --color'
       alias ll='ls -la'
       alias rm='rm -i'
