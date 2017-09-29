@@ -11,9 +11,10 @@ rancher:
     vm.max_map_count: 262144
   network:
     dns:
-      - 192.168.100.21
-      - 8.8.8.8
-      - 8.8.4.4
+      nameserver:
+        - 192.168.100.21
+        - 8.8.8.8
+        - 8.8.4.4
     interfaces:
       eth0:
         address: 192.168.104.50/24
