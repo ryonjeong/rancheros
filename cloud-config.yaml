@@ -7,7 +7,19 @@ ssh_authorized_keys:
 hostname: "CHANGE-HOSTNAME"
 
 rancher:
-  console: centos
-
   sysctl:
     vm.max_map_count: 262144
+#  network:
+#    interfaces:
+#      eth0:
+#        address: 192.168.104./24
+#        gateway: 172.68.1.1
+#        mtu: 1500
+#        dhcp: false
+
+write_files:
+  - path: /etc/ssh/sshd_config
+    permissions: "0600"
+    owner: root:root
+    content: |
+      Port 12321
