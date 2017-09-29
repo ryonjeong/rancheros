@@ -9,13 +9,17 @@ hostname: "CHANGE-HOSTNAME"
 rancher:
   sysctl:
     vm.max_map_count: 262144
-#  network:
-#    interfaces:
-#      eth0:
-#        address: 192.168.104./24
-#        gateway: 172.68.1.1
-#        mtu: 1500
-#        dhcp: false
+  network:
+    dns:
+      - 192.168.100.21
+      - 8.8.8.8
+      - 8.8.4.4
+    interfaces:
+      eth0:
+        address: 192.168.104.50/24
+        gateway: 192.168.104.1
+        mtu: 1500
+        dhcp: false
 
 write_files:
   - path: /etc/ssh/sshd_config
