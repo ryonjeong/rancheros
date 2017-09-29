@@ -5,3 +5,9 @@ ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7NR0iQe0wbn68zQ+GzLZctOG4JWieQO4Yh9eyqC03K+7zy2FOWD+zYTWqCCwVzNI8qTmsLbw0dkzYtxfUCv3SAlaurSfayMvVG28eQWpoIQ7pAlZRaw3Tn1zJqtOJVQEjkPAMEVYOmkW3odVRoh+EBRDK7nwJ8mmotEo3PwLx6fHCVUiN6qIf5ltHZdUsDma+wFVZbcwEGij90PgWB7jwJlPv0ZtZSaR57etWGuM4Xvl255on065CrLhx7dxWJ1eYV+Do2TAm7+dBvyvNasS2eF/rAm3sdeNwFcds/hn3Zaq2VG9xmdaZI4MRivmlUKITlJoUZSSx1fPOh173dsQbw==
 
 hostname: "CHANGE-HOSTNAME"
+
+rancher:
+  console: centos
+
+  sysctl:
+    vm.max_map_count: 262144
