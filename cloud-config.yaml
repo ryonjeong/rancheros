@@ -41,3 +41,4 @@ write_files:
       alias cp='cp -i'
       alias mv='mv -i'
       alias ..='cd ..'
+      alias htop='docker run --rm -it --pid host tehbilly/htop'
