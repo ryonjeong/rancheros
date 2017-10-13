@@ -21,6 +21,12 @@ rancher:
         gateway: 192.168.104.1
         mtu: 1500
         dhcp: false
+        
+runcmd:
+- sudo dd if=/dev/zero of=/swapfile bs=1k count=1M
+- sudo chmod 600 /swapfile
+- sudo mkswap /swapfile
+- sudo swapon /swapfile
 
 write_files:
   - path: /etc/ssh/sshd_config
